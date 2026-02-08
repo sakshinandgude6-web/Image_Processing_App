@@ -1,9 +1,9 @@
 const sharp = require("sharp");
 const Image = require("../models/Image");
-const path = require("path");
 const fs = require("fs");
 const TransformedImage = require("../models/TransformedImage");
 const generateHash = require("../utils/generateHash");
+const { getFromS3, uploadToS3 } = require("../services/storage.service");
 
 exports.uploadImage = async (req, res) => {
   try {
@@ -15,10 +15,16 @@ exports.uploadImage = async (req, res) => {
 
     const metadata = await sharp(file.path).metadata();
 
+    const fileBuffer = fs.readFileSync(file.path);
+
+    const key = `${req.user.userId}/original/${file.filename}`;
+
+    const s3Url = await uploadToS3(fileBuffer, key, file.mimetype);
+
     const image = await Image.create({
       owner: req.user.userId,
-      originalUrl: `/uploads/${file.filename}`,
-      originalKey: file.filename,
+      originalUrl: s3Url,
+      originalKey: key,
       width: metadata.width,
       height: metadata.height,
       format: metadata.format,
@@ -26,6 +32,8 @@ exports.uploadImage = async (req, res) => {
     });
 
     res.status(201).json(image);
+
+    fs.unlinkSync(file.path);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Failed to upload image" });
@@ -64,9 +72,9 @@ exports.transformImage = async (req, res) => {
       });
     }
 
-    const inputPath = path.join(__dirname, "../../uploads", image.originalKey);
+    const originalBuffer = await getFromS3(image.originalKey);
 
-    let pipeline = sharp(inputPath);
+    let pipeline = sharp(originalBuffer);
 
     if (transformations.resize) {
       const { width, height } = transformations.resize;
@@ -88,18 +96,22 @@ exports.transformImage = async (req, res) => {
       pipeline = pipeline.toFormat(outputFormat);
     }
 
-    const outputFileName = `${imageId}-${Date.now()}.${outputFormat}`;
+    const { data, info } = await pipeline.toBuffer({ resolveWithObject: true });
 
-    const outputPath = path.join(__dirname, "../../uploads", outputFileName);
+    const outputKey = `${req.user.userId}/transformed/${imageId}-${Date.now()}.${outputFormat}`;
 
-    const info = await pipeline.toFile(outputPath);
+    const outputUrl = await uploadToS3(
+      data,
+      outputKey,
+      `image/${outputFormat}`,
+    );
 
     const transformed = await TransformedImage.create({
       imageId: image._id,
       owner: req.user.userId,
       transformations,
       hash,
-      outputUrl: `/uploads/${outputFileName}`,
+      outputUrl,
       format: outputFormat,
       width: info.width,
       height: info.height,

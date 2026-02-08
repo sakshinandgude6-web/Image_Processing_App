@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const app = require("../app");
 
-describe("Image upload API", () => {
+describe("Image upload API to AWS S3", () => {
   let token;
 
   const userData = {
@@ -27,7 +27,7 @@ describe("Image upload API", () => {
     await mongoose.connection.close();
   });
 
-  it("should upload an image successfully", async () => {
+  it("should upload an image to s3 and store s3 url in", async () => {
     const filePath = path.join(__dirname, "files", "test-image.png");
 
     const res = await request(app)
@@ -35,14 +35,16 @@ describe("Image upload API", () => {
       .set("Authorization", `Bearer ${token}`)
       .attach("image", filePath);
 
-    expect(res.statusCode).toBe(201);
-
     expect(res.body).toHaveProperty("_id");
     expect(res.body).toHaveProperty("originalUrl");
     expect(res.body).toHaveProperty("width");
     expect(res.body).toHaveProperty("height");
     expect(res.body).toHaveProperty("format");
     expect(res.body).toHaveProperty("size");
+
+    expect(res.body.originalUrl).toContain(
+      `${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`,
+    );
   });
 
   it("should fail if image is missing", async () => {

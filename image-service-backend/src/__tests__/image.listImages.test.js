@@ -1,11 +1,11 @@
 require("dotenv").config({ path: "src/.env" });
 
 const request = require("supertest");
-const mongoose = require("mongoose");
 const path = require("path");
+const mongoose = require("mongoose");
 const app = require("../app");
 
-describe("List images API", () => {
+describe("List images API (real MongoDB + real S3)", () => {
   let token;
 
   const userData = {
@@ -19,6 +19,7 @@ describe("List images API", () => {
     await request(app).post("/api/auth/register").send(userData);
 
     const loginRes = await request(app).post("/api/auth/login").send(userData);
+
     token = loginRes.body.token;
 
     const filePath = path.join(__dirname, "files", "test-image.png");
@@ -35,7 +36,7 @@ describe("List images API", () => {
   });
 
   afterAll(async () => {
-    await mongoose.connection.close();
+    await mongoose.disconnect();
   });
 
   it("should return paginated list of images for logged-in user", async () => {
@@ -55,9 +56,14 @@ describe("List images API", () => {
 
     expect(Array.isArray(res.body.results)).toBe(true);
     expect(res.body.results.length).toBeGreaterThanOrEqual(2);
+
+    expect(res.body.results[0]).toHaveProperty("originalUrl");
+    expect(res.body.results[0].originalUrl).toContain(
+      `${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`,
+    );
   });
 
-  it("should return empty array when requesting a page with no results", async () => {
+  it("should return empty results for a page with no images", async () => {
     const res = await request(app)
       .get("/api/images?page=100&limit=10")
       .set("Authorization", `Bearer ${token}`);
