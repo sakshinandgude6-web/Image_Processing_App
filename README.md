@@ -49,12 +49,19 @@ Sharp (image processing)
 
 ## Tech Stack
 Node.js
+
 Express.js
+
 MongoDB (Mongoose)
+
 AWS S3
+
 Sharp
+
 JWT
+
 Multer
+
 Jest (API testing)
 
 ## Deployed Backend URL
@@ -62,33 +69,47 @@ https://imageprocessingapp-production.up.railway.app/
 
 ## Environment Variables
 Create a .env file with:
+
 PORT=4000
+
 MONGO_URI=your_mongodb_atlas_connection_string
+
 JWT_SECRET=your_jwt_secret
+
 AWS_REGION=your_region
+
 AWS_ACCESS_KEY=your_access_key
+
 AWS_SECRET_KEY=your_secret_key
+
 AWS_BUCKET_NAME=your_bucket_name
+
 
 ## Run Locally
 npm install
+
 npm run dev
+
 Server runs on:
 http://localhost:4000
 
 ## Authentication Endpoints
 Register
 POST /api/auth/register
+
 Login
 POST /api/auth/login
 
 ## Image APIs
 Upload Image
 POST /api/images
+
 Transform Image
 POST /api/images/:id/transform
+
 List User Images
 GET /api/images?page=1&limit=10
+
 Get Image Details (with all transformed versions)
 GET /api/images/:id
 
@@ -96,6 +117,7 @@ GET /api/images/:id
 If the same transformation is requested again for the same image:
 the server returns the cached transformed image
 no new processing is performed
+
 Response includes:
 cached: true
 
@@ -105,16 +127,20 @@ POST /api/images/:id/transform
 
 ## Testing
 Jest and Supertest are used for API tests.
+
 S3 operations are mocked in tests to avoid real cloud calls.
+
 Run:
 npm test
 
 ## Access Control
 Users can only access their own images
+
 All image endpoints are protected using JWT authentication
 
 ## Current Status
 Backend implementation is complete and deployed.
+
 Frontend will be implemented next and integrated with this API.
 
 ## Author
