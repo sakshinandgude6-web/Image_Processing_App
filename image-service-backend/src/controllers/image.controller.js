@@ -115,3 +115,61 @@ exports.transformImage = async (req, res) => {
     res.status(500).json({ message: "Transformation failed" });
   }
 };
+
+exports.listImages = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const skip = (page - 1) * limit;
+
+    const images = await Image.find({
+      owner: req.user.userId,
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Image.countDocuments({
+      owner: req.user.userId,
+    });
+
+    res.json({
+      page,
+      limit,
+      total,
+      results: images,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch images" });
+  }
+};
+
+exports.getImageById = async (req, res) => {
+  try {
+    const imageId = req.params.id;
+
+    const image = await Image.findOne({
+      _id: imageId,
+      owner: req.user.userId,
+    });
+
+    if (!image) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
+    const transformedImage = await TransformedImage.findOne({
+      imageId: image._id,
+      owner: req.user.userId,
+    });
+
+    res.json({
+      image,
+      transformedImage,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to fetch image" });
+  }
+};
