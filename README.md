@@ -9,42 +9,64 @@ This service supports user authentication, cloud storage, image transformation p
 Authentication
 
 User registration
+
 User login
+
 JWT based authentication
 
 Image Management
 
 Upload images
+
 Store images in AWS S3
+
 Retrieve user images
+
 View image metadata
 
 Image Transformations
 
 Users can apply one or more transformations in a single request:
+
 Resize
+
 Crop
+
 Rotate
+
 Format change (jpeg, png, webp, etc.)
+
 Grayscale filter
+
 Sepia filter
+
 (Extensible for more operations)
 
 Performance & Security
 
 Transformed image caching
+
 Rate-limiting on transform endpoint
+
 Ownership based access control
 
 ## Architecture (Current)
 Client
+
    |
+   
 API (Node + Express)
+
    |
+   
 MongoDB (metadata, users, transformations)
+
    |
+   
 AWS S3 (original + transformed images)
+
    |
+   
 Sharp (image processing)
 
 ## Tech Stack
@@ -115,7 +137,9 @@ GET /api/images/:id
 
 ## Caching Behaviour
 If the same transformation is requested again for the same image:
+
 the server returns the cached transformed image
+
 no new processing is performed
 
 Response includes:
