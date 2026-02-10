@@ -1,5 +1,5 @@
 # Image_Processing_App (Ongoing Project)
-A full-stack image processing application with Angular.js, Node.js + Express, JWT-based authentication, ownership-based access control, image upload and transformation with Multer and Sharp, caching, MongoDB, Pagination, Rate Limiting with express-rate-limit, file storage on disk with Amazon S3 integration in progress, and end-to-end integration testing using Jest and Supertest.
+A full-stack image processing application with React.js, Node.js + Express, JWT-based authentication, ownership-based access control, image upload and transformation with Multer and Sharp, caching, MongoDB, Pagination, Rate Limiting with express-rate-limit, file storage on disk with Amazon S3 integration in progress, and end-to-end integration testing using Jest and Supertest.
 
 ## Image Processing Backend Service
 A backend image processing service inspired by Cloudinary that allows users to upload images, apply transformations, and retrieve optimized image versions securely.
