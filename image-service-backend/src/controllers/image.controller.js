@@ -123,7 +123,7 @@ exports.transformImage = async (req, res) => {
       result: transformed,
     });
   } catch (error) {
-    console.error(err);
+    console.error(error);
     res.status(500).json({ message: "Transformation failed" });
   }
 };
