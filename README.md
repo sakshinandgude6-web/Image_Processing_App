@@ -11,11 +11,10 @@ Manage images via a modern React dashboard
 ## Live Deployment
 
 Frontend (Vercel): https://your-frontend-url.vercel.app
-
 Backend (Railway): https://your-backend-url.railway.app
 
-🏗️ Tech Stack
-🔹 Frontend
+ ## Tech Stack
+Frontend
 
 React (Vite)
 
@@ -27,7 +26,7 @@ CSS (Custom Styling)
 
 Vercel Deployment
 
-🔹 Backend
+Backend
 
 Node.js
 
@@ -43,38 +42,7 @@ Sharp (Image Processing)
 
 Railway Deployment
 
-📁 Project Structure
-Image_Processing_App/
-│
-├── image-service-backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── middlewares/
-│   │   ├── utils/
-│   │   ├── app.js
-│   │   └── server.js
-│   └── package.json
-│
-├── image-service-frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── Upload.jsx
-│   │   │   └── ImageDetails.jsx
-│   │   ├── api.js
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── vercel.json
-│   └── package.json
-│
-└── README.md
-
-🔐 Authentication System
+## Authentication System
 Backend
 
 JWT token generation
@@ -97,8 +65,8 @@ Protected route logic
 
 Logout clears token & redirects to login
 
-🖼️ Image Management Features
-1️⃣ Upload Image
+## Image Management Features
+1️. Upload Image
 
 Upload via multipart/form-data
 
@@ -116,13 +84,11 @@ Size
 
 Owner
 
-2️⃣ Transform Image
+2️. Transform Image
 
 Supported transformations:
 
 Resize
-
-Rotate
 
 Grayscale
 
@@ -142,9 +108,8 @@ If cached → return existing image
 
 If not cached → store new transformed image in S3
 
-3️⃣ List Images (Paginated)
+3️. List Images (Paginated)
 GET /images?page=1&limit=10
-
 
 Returns:
 
@@ -154,7 +119,7 @@ Total images
 
 Results array
 
-4️⃣ Get Image by ID
+4️. Get Image by ID
 
 Returns:
 
@@ -162,21 +127,21 @@ Original image
 
 Latest transformed image (if exists)
 
-🖥️ Frontend Features
+## Frontend Features
 Pages Implemented
-🔹 Login Page
+Login Page
 
 User authentication
 
 Redirect to dashboard after login
 
-🔹 Register Page
+Register Page
 
 New user creation
 
 JWT returned after registration
 
-🔹 Dashboard
+Dashboard
 
 Displays all user images
 
@@ -184,7 +149,7 @@ Paginated API integration
 
 Click to view image details
 
-🔹 Upload Page
+Upload Page
 
 Image file input
 
@@ -192,7 +157,7 @@ Preview before upload
 
 Upload success confirmation
 
-🔹 Image Details Page
+Image Details Page
 
 Display original image
 
@@ -202,26 +167,20 @@ View transformed result
 
 Cache-aware transformation handling
 
-⚠️ SPA Routing Issue (Important Learning)
+## SPA Routing Issue (Important Learning)
 
 Since the app uses:
 
 <BrowserRouter>
 
-
 Refreshing or directly accessing routes like:
-
 /login
 /dashboard
-
-
 caused 404 errors on Vercel.
 
-Why?
+Solution found:
 
 React Router handles routes client-side, but Vercel tries to find physical files.
-
-Solution
 
 Added vercel.json:
 
@@ -231,16 +190,13 @@ Added vercel.json:
   ]
 }
 
-
-Now:
-
 All routes serve index.html
 
 React Router handles navigation
 
 No more 404 errors
 
-⚙️ Environment Variables
+## Environment Variables
 Backend (.env)
 PORT=5000
 MONGODB_URI=your_mongodb_connection
@@ -254,7 +210,7 @@ AWS_BUCKET_NAME=your_bucket
 Frontend (.env)
 VITE_API_URL=https://your-backend-url.railway.app/api
 
-🧪 Testing
+## Testing
 
 Jest
 
@@ -266,7 +222,7 @@ S3 upload mocking
 
 Image upload integration test
 
-🚀 Deployment
+## Deployment
 Backend → Railway
 
 Connect GitHub
@@ -283,7 +239,7 @@ Add vercel.json
 
 Deploy
 
-📌 Key Concepts Demonstrated
+## Key Concepts Demonstrated
 
 REST API Architecture
 
@@ -305,15 +261,13 @@ Monorepo Deployment Handling
 
 Frontend + Backend Integration
 
-🧩 Future Enhancements
+## Future Enhancements
 
 Crop
 
 Watermark
 
 Compression
-
-Rate limiting
 
 Redis caching
 
@@ -323,21 +277,8 @@ CDN integration
 
 Docker containerization
 
-👩‍💻 Author
+## Author
 
 Sakshi Vijay Nandgude
-Full Stack Developer
+Information Technology Student
 
-⭐ Project Purpose
-
-This project demonstrates:
-
-Scalable backend architecture
-
-Cloud integration
-
-Image processing pipeline
-
-Production-ready frontend deployment
-
-Full-stack engineering skills
