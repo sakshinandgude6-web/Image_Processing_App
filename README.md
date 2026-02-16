@@ -10,9 +10,9 @@ Manage images via a modern React dashboard
 
 ## Live Deployment
 
-Frontend (Vercel): https://your-frontend-url.vercel.app
+Frontend (Vercel): https://image-processing-app-psi.vercel.app/
 
-Backend (Railway): https://your-backend-url.railway.app
+Backend (Railway): https://imageprocessingapp-production.up.railway.app/
 
  ## Tech Stack
 Frontend
