@@ -1,171 +1,343 @@
-# Image_Processing_App (Ongoing Project)
-A full-stack image processing application with React.js, Node.js + Express, JWT-based authentication, ownership-based access control, image upload and transformation with Multer and Sharp, caching, MongoDB, Pagination, Rate Limiting with express-rate-limit, file storage on disk with Amazon S3 integration in progress, and end-to-end integration testing using Jest and Supertest.
+# Image Processing Service (Cloudinary-Like Application)
 
-## Image Processing Backend Service
-A backend image processing service inspired by Cloudinary that allows users to upload images, apply transformations, and retrieve optimized image versions securely.
-This service supports user authentication, cloud storage, image transformation pipelines, caching of transformed images, and rate-limited processing APIs.
+A full-stack cloud image processing platform that allows users to:
+Register & Login (JWT Authentication)
+Upload images to AWS S3
+Apply image transformations (resize, grayscale, format conversion)
+Cache transformed images
+Retrieve original and transformed images
+Manage images via a modern React dashboard
 
-## Features
-Authentication
+## Live Deployment
 
-User registration
+Frontend (Vercel): https://your-frontend-url.vercel.app
 
-User login
+Backend (Railway): https://your-backend-url.railway.app
 
-JWT based authentication
+🏗️ Tech Stack
+🔹 Frontend
 
-Image Management
+React (Vite)
 
-Upload images
+React Router (BrowserRouter)
 
-Store images in AWS S3
+Axios
 
-Retrieve user images
+CSS (Custom Styling)
 
-View image metadata
+Vercel Deployment
 
-Image Transformations
+🔹 Backend
 
-Users can apply one or more transformations in a single request:
-
-Resize
-
-Crop
-
-Rotate
-
-Format change (jpeg, png, webp, etc.)
-
-Grayscale filter
-
-Sepia filter
-
-(Extensible for more operations)
-
-Performance & Security
-
-Transformed image caching
-
-Rate-limiting on transform endpoint
-
-Ownership based access control
-
-## Architecture (Current)
-Client
-
-   |
-   
-API (Node + Express)
-
-   |
-   
-MongoDB (metadata, users, transformations)
-
-   |
-   
-AWS S3 (original + transformed images)
-
-   |
-   
-Sharp (image processing)
-
-## Tech Stack
 Node.js
 
 Express.js
 
 MongoDB (Mongoose)
 
-AWS S3
+JWT Authentication
 
-Sharp
+AWS S3 (Cloud Storage)
 
-JWT
+Sharp (Image Processing)
 
-Multer
+Railway Deployment
 
-Jest (API testing)
+📁 Project Structure
+Image_Processing_App/
+│
+├── image-service-backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── middlewares/
+│   │   ├── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   └── package.json
+│
+├── image-service-frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Upload.jsx
+│   │   │   └── ImageDetails.jsx
+│   │   ├── api.js
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── vercel.json
+│   └── package.json
+│
+└── README.md
 
-## Deployed Backend URL
-https://imageprocessingapp-production.up.railway.app/
+🔐 Authentication System
+Backend
 
-## Environment Variables
-Create a .env file with:
+JWT token generation
 
-PORT=4000
+Auth middleware for protected routes
 
-MONGO_URI=your_mongodb_atlas_connection_string
+Secure user-password hashing
 
-JWT_SECRET=your_jwt_secret
+Owner-based image access control
 
+Frontend
+
+Login & Register pages
+
+Token stored in localStorage
+
+Axios interceptor for attaching JWT
+
+Protected route logic
+
+Logout clears token & redirects to login
+
+🖼️ Image Management Features
+1️⃣ Upload Image
+
+Upload via multipart/form-data
+
+Store original image in AWS S3
+
+Save metadata in MongoDB:
+
+Width
+
+Height
+
+Format
+
+Size
+
+Owner
+
+2️⃣ Transform Image
+
+Supported transformations:
+
+Resize
+
+Rotate
+
+Grayscale
+
+Format conversion (JPEG/PNG)
+
+Transformation Process:
+
+Fetch original image from S3
+
+Apply transformations using Sharp
+
+Generate unique hash
+
+Check cache (TransformedImage collection)
+
+If cached → return existing image
+
+If not cached → store new transformed image in S3
+
+3️⃣ List Images (Paginated)
+GET /images?page=1&limit=10
+
+
+Returns:
+
+Page number
+
+Total images
+
+Results array
+
+4️⃣ Get Image by ID
+
+Returns:
+
+Original image
+
+Latest transformed image (if exists)
+
+🖥️ Frontend Features
+Pages Implemented
+🔹 Login Page
+
+User authentication
+
+Redirect to dashboard after login
+
+🔹 Register Page
+
+New user creation
+
+JWT returned after registration
+
+🔹 Dashboard
+
+Displays all user images
+
+Paginated API integration
+
+Click to view image details
+
+🔹 Upload Page
+
+Image file input
+
+Preview before upload
+
+Upload success confirmation
+
+🔹 Image Details Page
+
+Display original image
+
+Apply transformations
+
+View transformed result
+
+Cache-aware transformation handling
+
+⚠️ SPA Routing Issue (Important Learning)
+
+Since the app uses:
+
+<BrowserRouter>
+
+
+Refreshing or directly accessing routes like:
+
+/login
+/dashboard
+
+
+caused 404 errors on Vercel.
+
+Why?
+
+React Router handles routes client-side, but Vercel tries to find physical files.
+
+Solution
+
+Added vercel.json:
+
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
+
+
+Now:
+
+All routes serve index.html
+
+React Router handles navigation
+
+No more 404 errors
+
+⚙️ Environment Variables
+Backend (.env)
+PORT=5000
+MONGODB_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
+
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
 AWS_REGION=your_region
+AWS_BUCKET_NAME=your_bucket
 
-AWS_ACCESS_KEY=your_access_key
+Frontend (.env)
+VITE_API_URL=https://your-backend-url.railway.app/api
 
-AWS_SECRET_KEY=your_secret_key
+🧪 Testing
 
-AWS_BUCKET_NAME=your_bucket_name
+Jest
 
+Supertest
 
-## Run Locally
-npm install
+Auth flow testing
 
-npm run dev
+S3 upload mocking
 
-Server runs on:
-http://localhost:4000
+Image upload integration test
 
-## Authentication Endpoints
-Register
-POST /api/auth/register
+🚀 Deployment
+Backend → Railway
 
-Login
-POST /api/auth/login
+Connect GitHub
 
-## Image APIs
-Upload Image
-POST /api/images
+Add environment variables
 
-Transform Image
-POST /api/images/:id/transform
+Deploy Node service
 
-List User Images
-GET /api/images?page=1&limit=10
+Frontend → Vercel
 
-Get Image Details (with all transformed versions)
-GET /api/images/:id
+Set Root Directory to image-service-frontend
 
-## Caching Behaviour
-If the same transformation is requested again for the same image:
+Add vercel.json
 
-the server returns the cached transformed image
+Deploy
 
-no new processing is performed
+📌 Key Concepts Demonstrated
 
-Response includes:
-cached: true
+REST API Architecture
 
-## Rate Limiting
-The transform endpoint is rate-limited to prevent abuse:
-POST /api/images/:id/transform
+JWT Authentication
 
-## Testing
-Jest and Supertest are used for API tests.
+Middleware Protection
 
-S3 operations are mocked in tests to avoid real cloud calls.
+AWS S3 Cloud Storage
 
-Run:
-npm test
+Image Processing (Sharp)
 
-## Access Control
-Users can only access their own images
+Transformation Caching via Hashing
 
-All image endpoints are protected using JWT authentication
+Pagination
 
-## Current Status
-Backend implementation is complete and deployed.
+SPA Routing in Production
 
-Frontend will be implemented next and integrated with this API.
+Monorepo Deployment Handling
 
-## Author
+Frontend + Backend Integration
+
+🧩 Future Enhancements
+
+Crop
+
+Watermark
+
+Compression
+
+Rate limiting
+
+Redis caching
+
+Background job queue (BullMQ / RabbitMQ)
+
+CDN integration
+
+Docker containerization
+
+👩‍💻 Author
+
 Sakshi Vijay Nandgude
+Full Stack Developer
+
+⭐ Project Purpose
+
+This project demonstrates:
+
+Scalable backend architecture
+
+Cloud integration
+
+Image processing pipeline
+
+Production-ready frontend deployment
+
+Full-stack engineering skills
